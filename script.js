@@ -24,6 +24,23 @@ function caesarDecrypt(text, shift) {
     .join("");
 }
 
+// ── Pré-carregar logo como base64 para o PDF ─────────────────────
+
+var logoBase64 = null;
+
+(function preloadLogo() {
+  var img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = function () {
+    var canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    canvas.getContext("2d").drawImage(img, 0, 0);
+    logoBase64 = canvas.toDataURL("image/png");
+  };
+  img.src = "corredoradf.png";
+})();
+
 // ── Utilitários ──────────────────────────────────────────────────
 
 function formatCPF(raw) {
@@ -46,13 +63,6 @@ function dataHojeBR() {
   return (
     d.getDate() + " de " + meses[d.getMonth()] + " de " + d.getFullYear()
   );
-}
-
-function dataHojeCurta() {
-  var d = new Date();
-  var dia = String(d.getDate()).padStart(2, "0");
-  var mes = String(d.getMonth() + 1).padStart(2, "0");
-  return dia + "/" + mes + "/" + d.getFullYear();
 }
 
 function normalizarNome(nome) {
@@ -158,150 +168,100 @@ document.getElementById("form-pdf").addEventListener("submit", function (e) {
 
 // ── PDF ──────────────────────────────────────────────────────────
 
-function drawLine(doc, x1, y, x2) {
-  doc.setDrawColor(100, 80, 150);
-  doc.setLineWidth(0.4);
-  doc.line(x1, y, x2, y);
-}
-
 function gerarPDF(atletaNome, atletaCpf, portadorNome, portadorCpf) {
   var doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+  var cx = 105;
+  var ml = 30;
+  var larg = 150;
+  var y = 20;
 
-  var pageW = 210;
-  var ml = 25;
-  var mr = 25;
-  var larg = pageW - ml - mr;
-  var y = 25;
-
-  // Borda decorativa roxa
-  doc.setDrawColor(123, 104, 174);
-  doc.setLineWidth(0.8);
-  doc.rect(15, 12, 180, 273);
-  doc.setDrawColor(180, 160, 220);
-  doc.setLineWidth(0.3);
-  doc.rect(17, 14, 176, 269);
-
-  // Linha decorativa superior
-  doc.setFillColor(123, 104, 174);
-  doc.rect(15, 12, 180, 5, "F");
-
-  // Título principal
-  y = 30;
-  doc.setFont("Helvetica", "bold");
-  doc.setFontSize(16);
-  doc.setTextColor(74, 58, 122);
-  doc.text("AUTORIZAÇÃO PARA RETIRADA", pageW / 2, y, { align: "center" });
-  y += 7;
-  doc.text("DE KIT POR TERCEIROS", pageW / 2, y, { align: "center" });
-  y += 5;
-
-  // Linha separadora abaixo do título
-  doc.setDrawColor(214, 51, 108);
-  doc.setLineWidth(0.6);
-  doc.line(60, y, 150, y);
-  y += 16;
-
-  // Corpo da autorização
-  doc.setFont("Helvetica", "normal");
-  doc.setFontSize(12);
-  doc.setTextColor(30, 30, 30);
-
-  var textoEu = "Eu, ";
-  var textoPortadorA1 = ", portador(a) do CPF ";
-  var textoAutorizo = ", autorizo ";
-  var textoPortadorA2 = ", portador(a) do CPF ";
-  var textoFinal = ", a retirar meu kit da corrida.";
-
-  var corpo =
-    textoEu + atletaNome.toUpperCase() + textoPortadorA1 + atletaCpf +
-    textoAutorizo + portadorNome.toUpperCase() + textoPortadorA2 + portadorCpf +
-    textoFinal;
-
-  var linhas = doc.splitTextToSize(corpo, larg);
-
-  for (var i = 0; i < linhas.length; i++) {
-    doc.text(linhas[i], ml, y);
-    y += 7;
+  // Logo centralizada
+  if (logoBase64) {
+    var logoW = 30;
+    var logoH = 30;
+    doc.addImage(logoBase64, "PNG", cx - logoW / 2, y, logoW, logoH);
+    y += logoH + 8;
+  } else {
+    y += 15;
   }
 
-  // Seção de dados estruturados
-  y += 10;
-  doc.setFillColor(245, 240, 255);
-  doc.roundedRect(ml, y - 5, larg, 42, 3, 3, "F");
-  doc.setDrawColor(180, 160, 220);
+  // Título
+  doc.setFont("Helvetica", "bold");
+  doc.setFontSize(13);
+  doc.setTextColor(0, 0, 0);
+  doc.text("AUTORIZAÇÃO PARA RETIRADA DE KIT ATLETA POR TERCEIRO", cx, y, { align: "center" });
+  y += 12;
+
+  // Linha fina separadora
+  doc.setDrawColor(0, 0, 0);
   doc.setLineWidth(0.3);
-  doc.roundedRect(ml, y - 5, larg, 42, 3, 3, "S");
+  doc.line(ml, y, ml + larg, y);
+  y += 15;
 
-  doc.setFont("Helvetica", "bold");
-  doc.setFontSize(9);
-  doc.setTextColor(123, 104, 174);
-  doc.text("ATLETA", ml + 6, y + 2);
-
-  doc.setFont("Helvetica", "normal");
-  doc.setFontSize(10);
-  doc.setTextColor(30, 30, 30);
-  doc.text("Nome: " + atletaNome, ml + 6, y + 9);
-  doc.text("CPF: " + atletaCpf, ml + 6, y + 15);
-
-  doc.setFont("Helvetica", "bold");
-  doc.setFontSize(9);
-  doc.setTextColor(123, 104, 174);
-  doc.text("PORTADOR(A) AUTORIZADO(A)", ml + 6, y + 24);
-
-  doc.setFont("Helvetica", "normal");
-  doc.setFontSize(10);
-  doc.setTextColor(30, 30, 30);
-  doc.text("Nome: " + portadorNome, ml + 6, y + 31);
-  doc.text("CPF: " + portadorCpf, ml + 6, y + 37);
-
-  y += 52;
-
-  // Data
+  // Texto da autorização
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(11);
-  doc.setTextColor(30, 30, 30);
-  doc.text("Brasília/DF, " + dataHojeBR() + ".", ml, y);
+  doc.setTextColor(0, 0, 0);
+
+  doc.text("Eu,", ml, y);
+  doc.setFont("Helvetica", "bold");
+  doc.text(atletaNome, ml + 8, y);
+  var nomeW = doc.getTextWidth(atletaNome);
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.2);
+  doc.line(ml + 8, y + 1, ml + 8 + nomeW, y + 1);
+
+  y += 8;
+  doc.setFont("Helvetica", "normal");
+  doc.text("portador(a) do CPF:", ml, y);
+  doc.setFont("Helvetica", "bold");
+  doc.text(atletaCpf, ml + 37, y);
+  var cpfW = doc.getTextWidth(atletaCpf);
+  doc.line(ml + 37, y + 1, ml + 37 + cpfW, y + 1);
+
+  y += 12;
+  doc.setFont("Helvetica", "normal");
+  doc.text("autorizo", ml, y);
+  doc.setFont("Helvetica", "bold");
+  doc.text(portadorNome, ml + 16, y);
+  var pNomeW = doc.getTextWidth(portadorNome);
+  doc.line(ml + 16, y + 1, ml + 16 + pNomeW, y + 1);
+
+  y += 8;
+  doc.setFont("Helvetica", "normal");
+  doc.text("portador(a) do CPF:", ml, y);
+  doc.setFont("Helvetica", "bold");
+  doc.text(portadorCpf, ml + 37, y);
+  var pCpfW = doc.getTextWidth(portadorCpf);
+  doc.line(ml + 37, y + 1, ml + 37 + pCpfW, y + 1);
+
+  y += 12;
+  doc.setFont("Helvetica", "normal");
+  doc.text("a retirar meu kit da corrida.", ml, y);
+
+  y += 20;
+
+  // Data
+  doc.text("Local e Data: Brasília/DF, " + dataHojeBR() + ".", ml, y);
 
   y += 30;
 
   // Assinatura do atleta
-  var sigW = 70;
-  var sigX1 = ml;
-  var sigX1Center = ml + sigW / 2;
-
-  drawLine(doc, sigX1, y, sigX1 + sigW);
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.3);
+  var sigW = 80;
+  var sigX = cx - sigW / 2;
+  doc.line(sigX, y, sigX + sigW, y);
   y += 5;
-  doc.setFont("Helvetica", "normal");
-  doc.setFontSize(9);
-  doc.setTextColor(80, 80, 80);
-  doc.text("Assinatura do atleta", sigX1Center, y, { align: "center" });
-  y += 4;
-  doc.setFontSize(8);
-  doc.setTextColor(120, 120, 120);
-  doc.text(atletaNome, sigX1Center, y, { align: "center" });
+  doc.setFontSize(10);
+  doc.text("Assinatura do atleta", cx, y, { align: "center" });
 
-  y += 22;
+  y += 25;
 
   // Assinatura do portador
-  drawLine(doc, sigX1, y, sigX1 + sigW);
+  doc.line(sigX, y, sigX + sigW, y);
   y += 5;
-  doc.setFontSize(9);
-  doc.setTextColor(80, 80, 80);
-  doc.text("Assinatura do portador", sigX1Center, y, { align: "center" });
-  y += 4;
-  doc.setFontSize(8);
-  doc.setTextColor(120, 120, 120);
-  doc.text(portadorNome, sigX1Center, y, { align: "center" });
-
-  // Rodapé
-  doc.setFontSize(7);
-  doc.setTextColor(160, 160, 160);
-  doc.text(
-    "Documento gerado em " + dataHojeCurta() + " via pegameukitdf",
-    pageW / 2,
-    278,
-    { align: "center" }
-  );
+  doc.text("Assinatura do portador", cx, y, { align: "center" });
 
   // Salvar
   var nomeArquivo = "autorizacao-kit-" + normalizarNome(atletaNome) + ".pdf";
