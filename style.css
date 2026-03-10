@@ -1,0 +1,279 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #7b68ae 0%, #9b8ec4 40%, #c4b8e0 100%);
+  color: #1a1a2e;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.container {
+  background: #ffffff;
+  max-width: 600px;
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(90, 60, 140, 0.25);
+  overflow: hidden;
+  position: relative;
+}
+
+.screen {
+  padding: 32px 28px 24px;
+  display: none;
+  animation: fadeIn 0.35s ease;
+}
+
+.screen.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.logo-img {
+  width: 128px;
+  height: 128px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.ig-link {
+  color: #d6336c;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.ig-link:hover {
+  color: #4a3a7a;
+  text-decoration: underline;
+}
+
+h1 {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 6px;
+  color: #4a3a7a;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: #6b7280;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* Choice box */
+
+.choice-box {
+  background: linear-gradient(135deg, #f5f0ff 0%, #ece6f8 100%);
+  border: 2px solid #9b8ec4;
+  border-radius: 14px;
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.choice-question {
+  font-size: 1.05rem;
+  margin-bottom: 20px;
+  color: #1a1a2e;
+  line-height: 1.5;
+}
+
+.choice-question strong {
+  color: #d6336c;
+  font-weight: 700;
+}
+
+.choice-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* Buttons */
+
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(90, 60, 140, 0.25);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-yes {
+  background: linear-gradient(135deg, #d6336c, #e8437a);
+  color: #ffffff;
+}
+
+.btn-yes:hover {
+  background: linear-gradient(135deg, #c22d60, #d6336c);
+}
+
+.btn-no {
+  background: #e8e0f4;
+  color: #4a3a7a;
+}
+
+.btn-no:hover {
+  background: #d6cbea;
+}
+
+.btn-generate {
+  width: 100%;
+  background: linear-gradient(135deg, #7b68ae, #9b8ec4);
+  color: #ffffff;
+  padding: 14px 24px;
+  font-size: 1.05rem;
+  margin-top: 8px;
+}
+
+.btn-generate:hover {
+  background: linear-gradient(135deg, #6a5a9a, #7b68ae);
+}
+
+/* Back button */
+
+.back-btn {
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  color: #9b8ec4;
+  cursor: pointer;
+  padding: 4px 0;
+  margin-bottom: 12px;
+  transition: color 0.15s;
+}
+
+.back-btn:hover {
+  color: #4a3a7a;
+}
+
+/* Auth header */
+
+.auth-header {
+  text-align: center;
+  background: linear-gradient(90deg, #f5f0ff, #ece6f8);
+  border-left: 4px solid #7b68ae;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.85rem;
+  color: #4a3a7a;
+  letter-spacing: 0.03em;
+}
+
+/* Form */
+
+form {
+  margin-bottom: 16px;
+}
+
+fieldset {
+  border: 1px solid #e0d8f0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+fieldset.hidden {
+  display: none;
+}
+
+legend {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #7b68ae;
+  padding: 0 8px;
+}
+
+.form-group {
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group:last-child {
+  margin-bottom: 4px;
+}
+
+label {
+  font-size: 0.82rem;
+  margin-bottom: 4px;
+  color: #374151;
+  font-weight: 500;
+}
+
+input {
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+input:focus {
+  border-color: #9b8ec4;
+  box-shadow: 0 0 0 3px rgba(123, 104, 174, 0.15);
+}
+
+/* Footer */
+
+.footer {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Responsivo */
+
+@media (max-width: 480px) {
+  .container {
+    border-radius: 16px;
+  }
+
+  .screen {
+    padding: 24px 18px 18px;
+  }
+
+  .choice-buttons {
+    flex-direction: column;
+  }
+
+  .choice-buttons .btn {
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 1.3rem;
+  }
+}

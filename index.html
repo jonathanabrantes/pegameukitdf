@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pega Meu Kit DF (@corredoradf)- Autorização de Retirada</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Tela 1: Escolha -->
+    <div id="screen-choice" class="screen active">
+      <div class="logo"><img src="corredoradf.png" alt="@corredoradf" class="logo-img" /></div>
+      <h1>Pega Meu Kit DF</h1>
+      <p class="subtitle">Autorização para retirada de kit de corrida</p>
+
+      <div class="choice-box">
+        <p class="choice-question">Kit será retirado pela <a href="https://www.instagram.com/corredoradf/" target="_blank" rel="noopener noreferrer" class="ig-link">@corredoradf</a>?</p>
+        <div class="choice-buttons">
+          <button class="btn btn-yes" id="btn-sim">Sim</button>
+          <button class="btn btn-no" id="btn-nao">Não, outra pessoa</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tela 2: Formulário -->
+    <div id="screen-form" class="screen">
+      <button class="back-btn" id="btn-voltar">&#8592; Voltar</button>
+      <h1>Pega Meu Kit DF</h1>
+
+      <p class="subtitle" id="form-subtitle"></p>
+
+      <div class="auth-header">
+        <strong>AUTORIZAÇÃO PARA RETIRADA DE KIT POR TERCEIROS</strong>
+      </div>
+
+      <form id="form-pdf">
+        <fieldset id="fieldset-atleta">
+          <legend>Dados do Atleta</legend>
+
+          <div class="form-group">
+            <label for="atleta-nome">Nome completo</label>
+            <input type="text" id="atleta-nome" required placeholder="Nome completo do atleta" />
+          </div>
+
+          <div class="form-group">
+            <label for="atleta-cpf">CPF</label>
+            <input type="text" id="atleta-cpf" required placeholder="000.000.000-00" maxlength="14" />
+          </div>
+        </fieldset>
+
+        <fieldset id="fieldset-portador" class="hidden">
+          <legend>Dados do Portador (quem vai retirar)</legend>
+
+          <div class="form-group">
+            <label for="portador-nome">Nome completo</label>
+            <input type="text" id="portador-nome" placeholder="Nome de quem vai retirar o kit" />
+          </div>
+
+          <div class="form-group">
+            <label for="portador-cpf">CPF</label>
+            <input type="text" id="portador-cpf" placeholder="000.000.000-00" maxlength="14" />
+          </div>
+        </fieldset>
+
+        <button type="submit" class="btn btn-generate">Gerar Autorização (PDF)</button>
+      </form>
+
+      <p class="footer">O PDF será baixado automaticamente, pronto para impressão e assinatura.</p>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
