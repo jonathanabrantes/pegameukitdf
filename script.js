@@ -141,8 +141,15 @@ document.getElementById("form-pdf").addEventListener("submit", function (e) {
   var atletaNome = document.getElementById("atleta-nome").value.trim();
   var atletaCpfRaw = document.getElementById("atleta-cpf").value.replace(/\D/g, "");
 
+  var corridaNome = document.getElementById("corrida-nome").value.trim();
+
   if (!atletaNome || atletaCpfRaw.length < 11) {
     alert("Preencha corretamente os dados do atleta.");
+    return;
+  }
+
+  if (!corridaNome) {
+    alert("Preencha o nome da corrida.");
     return;
   }
 
@@ -163,12 +170,12 @@ document.getElementById("form-pdf").addEventListener("submit", function (e) {
   var atletaCpf = formatCPF(atletaCpfRaw);
   var portadorCpf = formatCPF(portadorCpfRaw);
 
-  gerarPDF(atletaNome, atletaCpf, portadorNome, portadorCpf);
+  gerarPDF(atletaNome, atletaCpf, corridaNome, portadorNome, portadorCpf);
 });
 
 // ── PDF ──────────────────────────────────────────────────────────
 
-function gerarPDF(atletaNome, atletaCpf, portadorNome, portadorCpf) {
+function gerarPDF(atletaNome, atletaCpf, corridaNome, portadorNome, portadorCpf) {
   var doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
   var cx = 105;
   var ml = 30;
@@ -219,7 +226,21 @@ function gerarPDF(atletaNome, atletaCpf, portadorNome, portadorCpf) {
   var cpfW = doc.getTextWidth(atletaCpf);
   doc.line(ml + 37, y + 1, ml + 37 + cpfW, y + 1);
 
-  y += 12;
+  y += 10;
+  doc.setFont("Helvetica", "normal");
+  doc.text("Nome da Corrida:", ml, y);
+  y += 7;
+  doc.setFont("Helvetica", "bold");
+  var corrLines = doc.splitTextToSize(corridaNome, larg);
+  var yy = y;
+  for (var i = 0; i < corrLines.length; i++) {
+    doc.text(corrLines[i], ml, yy);
+    var lineW = doc.getTextWidth(corrLines[i]);
+    doc.line(ml, yy + 1, ml + lineW, yy + 1);
+    yy += 6;
+  }
+  y = yy + 2;
+
   doc.setFont("Helvetica", "normal");
   doc.text("autorizo", ml, y);
   doc.setFont("Helvetica", "bold");
