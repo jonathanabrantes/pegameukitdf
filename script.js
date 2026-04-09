@@ -2,7 +2,7 @@ const { jsPDF } = window.jspdf;
 
 // ── Cifra de César (shift=7) ─────────────────────────────────────
 const CZ_SHIFT = 7;
-const PORTADORA_NOME_ENC = "Qlupmly Jvzah kl Hiyhualz";
+const PORTADORA_NOME_ENC = "Qlupmly Jvzah";
 const PORTADORA_CPF_ENC  = "79208838897";
 
 function caesarDecrypt(text, shift) {
