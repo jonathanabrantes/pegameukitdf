@@ -226,21 +226,7 @@ function gerarPDF(atletaNome, atletaCpf, corridaNome, portadorNome, portadorCpf)
   var cpfW = doc.getTextWidth(atletaCpf);
   doc.line(ml + 37, y + 1, ml + 37 + cpfW, y + 1);
 
-  y += 10;
-  doc.setFont("Helvetica", "normal");
-  doc.text("Nome da Corrida:", ml, y);
-  y += 7;
-  doc.setFont("Helvetica", "bold");
-  var corrLines = doc.splitTextToSize(corridaNome, larg);
-  var yy = y;
-  for (var i = 0; i < corrLines.length; i++) {
-    doc.text(corrLines[i], ml, yy);
-    var lineW = doc.getTextWidth(corrLines[i]);
-    doc.line(ml, yy + 1, ml + lineW, yy + 1);
-    yy += 6;
-  }
-  y = yy + 2;
-
+  y += 12;
   doc.setFont("Helvetica", "normal");
   doc.text("autorizo", ml, y);
   doc.setFont("Helvetica", "bold");
@@ -258,7 +244,23 @@ function gerarPDF(atletaNome, atletaCpf, corridaNome, portadorNome, portadorCpf)
 
   y += 12;
   doc.setFont("Helvetica", "normal");
-  doc.text("a retirar meu kit da corrida.", ml, y);
+  var fraseKit = "a retirar meu kit da corrida ";
+  doc.text(fraseKit, ml, y);
+  var wFrase = doc.getTextWidth(fraseKit);
+  doc.setFont("Helvetica", "bold");
+  var wNome1 = larg - wFrase;
+  var linhasCorrida = doc.splitTextToSize(corridaNome, wNome1);
+  doc.text(linhasCorrida[0], ml + wFrase, y);
+  var lastW = doc.getTextWidth(linhasCorrida[0]);
+  var k;
+  for (k = 1; k < linhasCorrida.length; k++) {
+    y += 6;
+    doc.text(linhasCorrida[k], ml, y);
+    lastW = doc.getTextWidth(linhasCorrida[k]);
+  }
+  doc.setFont("Helvetica", "normal");
+  var xPonto = linhasCorrida.length === 1 ? ml + wFrase + lastW : ml + lastW;
+  doc.text(".", xPonto, y);
 
   y += 20;
 
